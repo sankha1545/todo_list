@@ -1,0 +1,377 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 500;
+}
+#updatePopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid black;
+            padding: 20px;
+            background-color: white;
+            z-index: 1000;
+            border-radius: 20px;
+            width: 460px;
+            height: 500px;
+        }
+html,body{
+  display: grid;
+  height: 100%;
+  width: 100%;
+  place-items: center;
+  background:url('./files/bg.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  /* background: linear-gradient(-135deg, #c850c0, #4158d0); */
+}
+h1{
+  color:#fcf6fc;
+  font-size: 25px;
+}
+::selection{
+  background: #4158d0;
+  color: #fff;
+}
+.logo img {
+  width: 100px; /* Adjust width as needed */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 20px;
+  margin-left: 10px;
+}
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.7); /* White with 70% opacity */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+
+.wrapper{
+  width: 380px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+  margin-left: -870px;
+  margin-top: 200px;
+}
+.wrapper .title{
+  font-size: 35px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 100px;
+  color: #fff;
+  user-select: none;
+  border-radius: 15px 15px 0 0;
+  background: linear-gradient(-135deg, #c850c0, #4158d0);
+}
+.wrapper form{
+  padding: 10px 30px 50px 30px;
+}
+.wrapper form .field{
+  height: 50px;
+  width: 100%;
+  margin-top: 20px;
+  position: relative;
+}
+.wrapper form .field input{
+  height: 100%;
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  padding-left: 20px;
+  border: 1px solid rgb(74, 6, 142);
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  
+}
+.wrapper form .field select{
+  height: 100%;
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  padding-left: 20px;
+  border: 1px solid  rgb(74, 6, 142);
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.wrapper form .field input:focus,
+form .field input:valid{
+  border-color: #4158d0;
+}
+.wrapper form .field label{
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  color: #999999;
+  font-weight: 400;
+  font-size: 17px;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+form .field input:focus ~ label,
+form .field input:valid ~ label{
+  top: 0%;
+  font-size: 16px;
+  color: #4158d0;
+  background: #fff;
+  transform: translateY(-50%);
+}
+form .content{
+  display: flex;
+  width: 100%;
+  height: 50px;
+  font-size: 16px;
+  align-items: center;
+  justify-content: space-around;
+}
+form .content .checkbox{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+form .content input{
+  width: 15px;
+  height: 15px;
+  background: red;
+}
+form .content label{
+  color: #262626;
+  user-select: none;
+  padding-left: 5px;
+}
+form .content .pass-link{
+  color: "";
+}
+form .field input[type="submit"]{
+  color: #fff;
+  border: none;
+  padding-left: 0;
+  margin-top: -10px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  transition: all 0.3s ease;
+}
+form .field input[type="submit"]:active{
+  transform: scale(0.95);
+}
+form .signup-link{
+  color: #262626;
+  margin-top: 20px;
+  text-align: center;
+}
+form .pass-link a,
+form .signup-link a{
+  color: #4158d0;
+  text-decoration: none;
+}
+form .pass-link a:hover,
+form .signup-link a:hover{
+  text-decoration: underline;
+}
+.add-task{
+  margin-top: 30px;
+  width:150px;
+  border-radius: 30px ;
+  height: 30px;
+  margin-left: 10px;
+  cursor: pointer;
+  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  border:none;
+  color: #f2f2f2;
+  box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+}
+.add-task:hover{
+  background-color: linear-gradient(-135deg, #f345e7, #4158d0);;
+}
+.view-tasks-button{
+  color: #fff;
+  border: none;
+  padding-left: 0;
+  margin-top: -10px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  transition: all 0.3s ease;
+  border-radius: 30px;
+  margin-left: 8px;
+  margin-bottom: 20px;
+  width: 320px;
+  height: 50px;
+}
+.del-btn{
+  width: 80px;
+  height: 30px;
+cursor: pointer;
+background-color: rgb(244, 132, 132);
+border-radius: 20px;
+border: none;
+box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+margin-left: 18px;
+transition: background-color 0.3s ease;
+color: #fff;
+}
+.del-btn:hover{
+  background-color: #fc4b4b;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  padding-top: 60px;
+  border-radius: 20px;
+}
+
+#updatePopup {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 500px;
+  height: 500px;
+  border-radius: 20px;
+}
+#updatePopup .field{
+  height: 50px;
+  width: 100%;
+  margin-top: 20px;
+  position: relative;
+}
+#updatePopup .field input{
+  height: 100%;
+  width: 190%;
+  outline: none;
+  font-size: 17px;
+  padding-left: 20px;
+  border: 1px solid lightgrey;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+#updatePopup .field select{
+  height: 100%;
+  width: 190%;
+  outline: none;
+  font-size: 17px;
+  padding-left: 20px;
+  border: 1px solid lightgrey;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+#updatePopup .title{
+    display: block;
+    color: #c850c0;
+    border-color: #262626;
+}
+.close-btn {
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: rgb(242, 134, 134);
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    margin-left: 18px;
+    transition: background-color 0.3s ease;
+    color: #fff;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.update-btn{
+  width: 100px;
+  height: 30px;
+  cursor: pointer;
+  background-color: rgb(121, 233, 104);
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  margin-left: 18px;
+  transition: background-color 0.3s ease;
+  color: #fff;
+}
+.edit-btn{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: rgb(121, 233, 104);
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    margin-left: 18px;
+    transition: background-color 0.3s ease;
+    color: #fff;
+  }
+  .delete-btn{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: rgb(244, 132, 132);
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    margin-left: 18px;
+    transition: background-color 0.3s ease;
+    color: #fff;
+  }
+.update-btn:hover,
+.update-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+.form-update-btn{
+  width:100px;
+  height: 40px;
+  cursor: pointer;
+  background-color: rgb(244, 132, 132);
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+  margin-left: 18px;
+  transition: background-color 0.3s ease;
+  color: #fff;
+  
+}
+.form-update-btn:hover{
+  background-color: #fc4b4b;
+}

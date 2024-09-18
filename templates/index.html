@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="../static/files/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../static/task.css">
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul>
+            <header>
+                <div class="logo">
+                    <a href="{{ url_for('index') }}">
+                        <img src="../static/files/logo.png" alt="Site Logo">
+                    </a>
+                </div>
+            </header>
+        </ul>
+    </nav>
+    <div class="wrapper">
+        <div class="title">
+            <h1>To-Do List</h1>
+        </div>
+        <form id="addTaskForm" method="POST" action="/add">
+            <div class="field">
+                <input type="text" name="task" placeholder="Add Task" required>
+            </div>
+            <div class="field">
+                <input type="text" name="description" placeholder="Description" required>
+            </div>
+            <div class="field">
+                <input type="date" name="due_time" required>
+            </div>
+            <div class="field">
+                <select name="priority_level" required>
+                    <option value="">--Priority Level--</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+            <button type="submit" class="add-task">Add Task</button>
+        </form>
+    </div>
+    <br>
+    <main class="table" id="customers_table">
+        <section class="table__header">
+            <div class="input-group">
+                <input type="search" placeholder="Search Data...">
+            </div>
+        </section>
+        <section class="table__body">
+            <table id="mainTable">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Description</th>
+                        <th>Due Time</th>
+                        <th>Priority Level</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTableBody">
+                    {% for task in tasks %}
+                    <tr data-task-id="{{ task.id }}">
+                        <td>{{ task.task }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.due_time }}</td>
+                        <td>{{ task.priority_level }}</td>
+                        <td>{{ task.status }}</td>
+                        <td>
+                            <input type="checkbox" class="task-status-checkbox" {% if task.status == 'Completed' %} checked {% endif %} />
+                            <button class="edit-btn">Edit</button>
+                            <form method="POST" action="/delete/{{ task.id }}" style="display:inline;">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <div id="no-match-message" style="display: none;">No Matching Data Found.</div>
+    </main>
+    <br>
+    
+
+    <div id="updatePopup" style="display: none;">
+        <form id="updateForm">
+            <input type="hidden" id="updateTaskId">
+            <div class="field">
+                <input type="text" id="updateTask" name="task" placeholder="Task" required>
+            </div>
+            <div class="field">
+                <input type="text" id="updateDescription" name="description" placeholder="Description" required>
+            </div>
+            <div class="field">
+                <input type="date" id="updateDueTime" name="due_time" required>
+            </div>
+            <div class="field">
+                <select id="updatePriorityLevel" name="priority_level" required>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+            <div class="field">
+                <select id="updateStatus" name="status" required>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="update-btn">Update Task</button>
+            <button type="button" class="close-btn">Cancel</button>
+        </form>
+    </div>
+
+    <div id="overlay" style="display: none;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addTaskForm = document.getElementById('addTaskForm');
+            const taskTableBody = document.getElementById('taskTableBody');
+            const updatePopup = document.getElementById('updatePopup');
+            const closeBtn = document.querySelector('.close-btn');
+            const updateForm = document.getElementById('updateForm');
+            const overlay = document.getElementById('overlay');
+
+            taskTableBody.addEventListener('click', async (event) => {
+                if (event.target.classList.contains('edit-btn')) {
+                    const row = event.target.closest('tr');
+                    const taskId = row.getAttribute('data-task-id');
+
+                    const response = await fetch(`/get_task/${taskId}`);
+                    const task = await response.json();
+
+                    document.getElementById('updateTaskId').value = taskId;
+                    document.getElementById('updateTask').value = task.task;
+                    document.getElementById('updateDescription').value = task.description;
+                    document.getElementById('updateDueTime').value = task.due_time;
+                    document.getElementById('updatePriorityLevel').value = task.priority_level;
+                    document.getElementById('updateStatus').value = task.status;
+
+                    updatePopup.style.display = 'flex';
+                    overlay.style.display = 'block';
+                }
+
+                if (event.target.classList.contains('delete-btn')) {
+                    const row = event.target.closest('tr');
+                    const taskId = row.getAttribute('data-task-id');
+
+                    const response = await fetch(`/delete/${taskId}`, {
+                        method: 'POST'
+                    });
+
+                    if (response.ok) {
+                        row.remove();
+                    }
+                }
+            });
+
+            closeBtn.addEventListener('click', () => {
+                updatePopup.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+
+            updateForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const taskId = document.getElementById('updateTaskId').value;
+                const task = document.getElementById('updateTask').value;
+                const description = document.getElementById('updateDescription').value;
+                const dueTime = document.getElementById('updateDueTime').value;
+                const priorityLevel = document.getElementById('updatePriorityLevel').value;
+                const status = document.getElementById('updateStatus').value;
+
+                const response = await fetch(`/update/${taskId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        task,
+                        description,
+                        due_time: dueTime,
+                        priority_level: priorityLevel,
+                        status
+                    }).toString()
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='task.js') }}"></script>
+</body>
+
+</html>
